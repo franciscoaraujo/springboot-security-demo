@@ -66,4 +66,9 @@ public class EspecialidadeService {
 		Page<Especialidade>page = repository.findByMedico(id,datatables.getPageable());
 		return datatables.getResponse(page);
 	}
+	
+	@Transactional(readOnly = true)
+	public boolean existeEspecialidadeEmAgendamento(Long id) {
+		return repository.hasEspecialidadeAgendada(id).isPresent();
+	}
 }

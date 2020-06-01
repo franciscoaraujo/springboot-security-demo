@@ -21,9 +21,9 @@ public class Paciente extends AbstractEntity {
 	private LocalDate dtNascimento;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "paciente")
+	@OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Agendamento> agendamentos;
-	
+
 	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;

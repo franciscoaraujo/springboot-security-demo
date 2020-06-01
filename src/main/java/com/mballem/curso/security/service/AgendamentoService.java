@@ -16,6 +16,7 @@ import com.mballem.curso.security.datatables.Datatables;
 import com.mballem.curso.security.datatables.DatatablesColunas;
 import com.mballem.curso.security.domain.Agendamento;
 import com.mballem.curso.security.domain.Horario;
+import com.mballem.curso.security.exception.AcessoNegadoException;
 import com.mballem.curso.security.repository.AgendamentoRepository;
 import com.mballem.curso.security.repository.projection.HistoricoPaciente;
 
@@ -55,6 +56,32 @@ public class AgendamentoService {
 		return datatables.getResponse(page);
 		
 
+	}
+	
+	@Transactional(readOnly=true)
+	public Agendamento buscaAgendamentoPorId(Long id) {
+		return repository.findById(id).get();
+	}
+	
+	@Transactional(readOnly=false)
+	public void editarAgendamento(Agendamento agendamento, String username) {
+		Agendamento ag = buscaAgendamentoPorIdEUsuario(agendamento.getId(), username);
+		ag.setDataConsulta(agendamento.getDataConsulta());
+		ag.setEspecialidade(agendamento.getEspecialidade());
+		ag.setHorario(agendamento.getHorario());
+		ag.setMedico(agendamento.getMedico());
+	}
+	
+	@Transactional(readOnly=true)
+	public Agendamento buscaAgendamentoPorIdEUsuario(Long id, String email) {
+		
+		return repository
+				.findByIdAndPacienteOrMedicoEmail(id, email)
+				.orElseThrow(() -> new AcessoNegadoException("Acesso negado ao usúario " + email));
+	}
+
+	public void excluirAgendamentoIdUsuario(Long id) {
+		repository.deleteById(id);
 	}
 	
 }

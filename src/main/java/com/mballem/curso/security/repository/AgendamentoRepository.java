@@ -2,16 +2,19 @@ package com.mballem.curso.security.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.mballem.curso.security.domain.Agendamento;
 import com.mballem.curso.security.domain.Horario;
 import com.mballem.curso.security.repository.projection.HistoricoPaciente;
 
+@Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long>{
 	
 	@Query(" select h "
@@ -45,6 +48,13 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long>{
 		+ " from Agendamento a "
 		+ " where a.medico.usuario.email like :email")
 	Page<HistoricoPaciente> findHistoricoByMedicoEmail(String email, Pageable pageable);
+	
+	@Query("select a from Agendamento a "
+			+ "where "
+			+ " (a.id = :id and a.paciente.usuario.email like :email) "
+			+ " or "
+			+ " (a.id = :id and a.medico.usuario.email like :email)")
+	Optional<Agendamento> findByIdAndPacienteOrMedicoEmail(Long id, String email);
 	
 	
 }

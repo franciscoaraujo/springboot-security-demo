@@ -19,7 +19,7 @@ public class Agendamento extends AbstractEntity {
 	@JoinColumn(name="id_medico")
 	private Medico medico;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	@JoinColumn(name="id_paciente")
 	private Paciente paciente;
 	

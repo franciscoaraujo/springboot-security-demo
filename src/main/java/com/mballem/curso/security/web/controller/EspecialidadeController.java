@@ -50,8 +50,13 @@ public class EspecialidadeController {
 
 	@GetMapping("/excluir/{id}")
 	public String excluir(@PathVariable("id") Long id, RedirectAttributes attr) {
-		service.remover(id);
-		attr.addFlashAttribute("Sucesso", "Operação realizada com sucesso.");
+		
+		if(service.existeEspecialidadeEmAgendamento(id)) {
+			attr.addFlashAttribute("falha", "Existem consultas agendados para essa especialidade, exclusão negada");
+		}else{
+			service.remover(id);
+			attr.addFlashAttribute("sucesso", "Operação realizada com sucesso.");
+		}
 		return "redirect:/especialidades";
 	}
 

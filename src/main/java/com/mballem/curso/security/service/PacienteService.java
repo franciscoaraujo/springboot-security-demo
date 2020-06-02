@@ -28,5 +28,9 @@ public class PacienteService {
 		p2.setNome(paciente.getNome());
 		p2.setDtNascimento(paciente.getDtNascimento());
 	}
+
+	public boolean buscarPacienteValidoPorEmail(String username) {
+		return repository.findByPacienteEmail(username).isPresent();
+	}
 	
 }

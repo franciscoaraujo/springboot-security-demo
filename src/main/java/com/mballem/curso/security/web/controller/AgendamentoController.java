@@ -57,6 +57,7 @@ public class AgendamentoController {
 	@PreAuthorize("hasAnyAuthority('PACIENTE')")
 	@PostMapping({ "/salvar" })
 	public String salvar(Agendamento agendamento, RedirectAttributes attr, @AuthenticationPrincipal User user) {
+
 		Paciente paciente = pacienteService.buscarPacientePorEmail(user.getUsername());
 		String titulo = agendamento.getEspecialidade().getTitulo();
 		Especialidade especialidade = especialidadeService.buscarPorTitulo(new String[] { titulo }).stream().findFirst()
@@ -65,7 +66,7 @@ public class AgendamentoController {
 		agendamento.setPaciente(paciente);
 		service.salvar(agendamento);
 		attr.addFlashAttribute("sucesso", "Sua consulta foi agendada com sucesso!");
-
+		
 		return "redirect:/agendamentos/agendar";
 	}
 
